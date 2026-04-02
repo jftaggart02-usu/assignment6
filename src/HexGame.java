@@ -39,14 +39,14 @@ public class HexGame {
         }
 
         // DEBUG: print the grid positions
-        System.out.println("Top edge positions:");
-        System.out.println(Arrays.toString(TOP_EDGE_POSITIONS));
-        System.out.println("Bottom edge positions:");
-        System.out.println(Arrays.toString(BOTTOM_EDGE_POSITIONS));
-        System.out.println("Left edge positions:");
-        System.out.println(Arrays.toString(LEFT_EDGE_POSITIONS));
-        System.out.println("Right edge positions:");
-        System.out.println(Arrays.toString(RIGHT_EDGE_POSITIONS));
+//        System.out.println("Top edge positions:");
+//        System.out.println(Arrays.toString(TOP_EDGE_POSITIONS));
+//        System.out.println("Bottom edge positions:");
+//        System.out.println(Arrays.toString(BOTTOM_EDGE_POSITIONS));
+//        System.out.println("Left edge positions:");
+//        System.out.println(Arrays.toString(LEFT_EDGE_POSITIONS));
+//        System.out.println("Right edge positions:");
+//        System.out.println(Arrays.toString(RIGHT_EDGE_POSITIONS));
 
     }
 
@@ -58,7 +58,9 @@ public class HexGame {
     public boolean playBlue(int position, boolean displayNeighbors) {
 
         // Set the position to blue
-        grid[position] = Color.Blue;
+        if (!isOccupied(position)) {
+            grid[position] = Color.Blue;
+        }
 
         // Union the position with all blue neighbors and either left or right board edge, if applicable.
         ArrayList<Integer> blueNeighbors = getNeighborsBlue(position);
@@ -69,8 +71,14 @@ public class HexGame {
         // Display neighbors if desired
         if (displayNeighbors) {
             System.out.print("Cell " + position +  ": [ ");
-            for (Integer neighbor : blueNeighbors) {
-                System.out.print(neighbor + " ");
+            if (touchingLeftEdge(position)) {
+                System.out.print(LEFT_EDGE + " ");
+            }
+            if (touchingRightEdge(position)) {
+                System.out.print(RIGHT_EDGE + " ");
+            }
+            for (Integer ac : getAdjacentCells(position)) {
+                System.out.print(ac + " ");
             }
             System.out.println("]");
         }
@@ -86,7 +94,9 @@ public class HexGame {
     public boolean playRed(int position, boolean displayNeighbors) {
 
         // Set the position to red
-        grid[position] = Color.Red;
+        if (!isOccupied(position)) {
+            grid[position] = Color.Red;
+        }
 
         // Union the position with all blue neighbors and either left or right board edge, if applicable.
         ArrayList<Integer> redNeighbors = getNeighborsRed(position);
@@ -95,10 +105,17 @@ public class HexGame {
         }
 
         // Display neighbors if desired
+        // Display neighbors if desired
         if (displayNeighbors) {
             System.out.print("Cell " + position +  ": [ ");
-            for (Integer neighbor : redNeighbors) {
-                System.out.print(neighbor + " ");
+            if (touchingTopEdge(position)) {
+                System.out.print(TOP_EDGE + " ");
+            }
+            if (touchingBottomEdge(position)) {
+                System.out.print(BOTTOM_EDGE + " ");
+            }
+            for (Integer ac : getAdjacentCells(position)) {
+                System.out.print(ac + " ");
             }
             System.out.println("]");
         }
@@ -134,12 +151,12 @@ public class HexGame {
      * */
     private ArrayList<Integer> getAdjacentCells(int position) {
         var ac = new ArrayList<Integer>();
-        ac.add(position+1);
-        ac.add(position-1);
-        ac.add(position+size-1);
-        ac.add(position+size);
         ac.add(position-size);
         ac.add(position-size+1);
+        ac.add(position-1);
+        ac.add(position+1);
+        ac.add(position+size-1);
+        ac.add(position+size);
         if (touchingTopEdge(position)) {
             ac.remove(Integer.valueOf(position-size));
             ac.remove(Integer.valueOf(position-size+1));
@@ -197,20 +214,20 @@ public class HexGame {
         return neighborsBlue;
     }
 
-    private boolean touchingTopEdge(int idx) {
-        return Arrays.binarySearch(TOP_EDGE_POSITIONS, idx) >= 0;
+    private boolean touchingTopEdge(int pos) {
+        return Arrays.binarySearch(TOP_EDGE_POSITIONS, pos) >= 0;
     }
 
-    private boolean touchingBottomEdge(int idx) {
-        return Arrays.binarySearch(BOTTOM_EDGE_POSITIONS, idx) >= 0;
+    private boolean touchingBottomEdge(int pos) {
+        return Arrays.binarySearch(BOTTOM_EDGE_POSITIONS, pos) >= 0;
     }
 
-    private boolean touchingLeftEdge(int idx) {
-        return Arrays.binarySearch(LEFT_EDGE_POSITIONS, idx) >= 0;
+    private boolean touchingLeftEdge(int pos) {
+        return Arrays.binarySearch(LEFT_EDGE_POSITIONS, pos) >= 0;
     }
 
-    private boolean touchingRightEdge(int idx) {
-        return Arrays.binarySearch(RIGHT_EDGE_POSITIONS, idx) >= 0;
+    private boolean touchingRightEdge(int pos) {
+        return Arrays.binarySearch(RIGHT_EDGE_POSITIONS, pos) >= 0;
     }
 
     private final int size;
