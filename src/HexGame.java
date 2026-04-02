@@ -38,16 +38,6 @@ public class HexGame {
             RIGHT_EDGE_POSITIONS[i] = i * size + size;
         }
 
-        // DEBUG: print the grid positions
-//        System.out.println("Top edge positions:");
-//        System.out.println(Arrays.toString(TOP_EDGE_POSITIONS));
-//        System.out.println("Bottom edge positions:");
-//        System.out.println(Arrays.toString(BOTTOM_EDGE_POSITIONS));
-//        System.out.println("Left edge positions:");
-//        System.out.println(Arrays.toString(LEFT_EDGE_POSITIONS));
-//        System.out.println("Right edge positions:");
-//        System.out.println(Arrays.toString(RIGHT_EDGE_POSITIONS));
-
     }
 
     /**
@@ -151,12 +141,16 @@ public class HexGame {
      * */
     private ArrayList<Integer> getAdjacentCells(int position) {
         var ac = new ArrayList<Integer>();
+
+        // Add all adjacent cells by default
         ac.add(position-size);
         ac.add(position-size+1);
         ac.add(position-1);
         ac.add(position+1);
         ac.add(position+size-1);
         ac.add(position+size);
+
+        // Remove any if cell is touching an edge
         if (touchingTopEdge(position)) {
             ac.remove(Integer.valueOf(position-size));
             ac.remove(Integer.valueOf(position-size+1));
@@ -200,10 +194,10 @@ public class HexGame {
      * */
     private ArrayList<Integer> getNeighborsBlue(int position) {
         var neighborsBlue = new ArrayList<Integer>();
-        if (touchingTopEdge(position)) {
+        if (touchingLeftEdge(position)) {
             neighborsBlue.add(LEFT_EDGE);
         }
-        if (touchingBottomEdge(position)) {
+        if (touchingRightEdge(position)) {
             neighborsBlue.add(RIGHT_EDGE);
         }
         for (Integer i : getAdjacentCells(position)) {

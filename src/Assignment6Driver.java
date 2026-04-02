@@ -2,19 +2,15 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Assignment6Driver {
+    // Macros for setting console output color
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
 
     public static void main(String[] args) {
-
-//        testGame();
+        testDisjointSet();
+        testGame();
+        System.out.println();
         playGame("moves1.txt");
         System.out.println();
         playGame("moves2.txt");
@@ -27,24 +23,27 @@ public class Assignment6Driver {
 
             boolean win = false;
             String winner = "None";
-            boolean blue = true;
+            boolean blue = true;  // Blue starts
             int move = -1;
-            while (!win && input.hasNextInt()) {
+            while (!win && input.hasNextInt()) {  // Go until someone wins or there are no more moves in the file
                 move = input.nextInt();
+
+                // Alternate between playing blue and red
                 if (blue) {
                     win = game.playBlue(move, false);
                     winner = "Blue";
-                    blue = false;
+                    blue = false;  // Toggle player
                 }
                 else {
                     win = game.playRed(move, false);
                     winner = "Red";
-                    blue = true;
+                    blue = true;  // Toggle player
                 }
             }
 
+            // If someone won, display the winner
             if (win) {
-                System.out.println(winner + " wins with move at position " + move);
+                System.out.println(winner + " wins with move at position " + move + "!!");
             }
 
             printGrid(game);
@@ -55,8 +54,6 @@ public class Assignment6Driver {
         }
     }
 
-    //
-    // TODO: You can use this to compare with the output show in the assignment while working on your code
     private static void testGame() {
         HexGame game = new HexGame(11);
 
@@ -81,9 +78,16 @@ public class Assignment6Driver {
         printGrid(game);
     }
 
+    /**
+     * Make the text display in red when printed to the console.
+     * */
     private static String makeRed(String text) {
         return ANSI_RED + text + ANSI_RESET;
     }
+
+    /**
+     * Make the text display in blue when printed to the console.
+     * */
     private static String makeBlue(String text) {
         return ANSI_BLUE + text + ANSI_RESET;
     }
@@ -111,6 +115,26 @@ public class Assignment6Driver {
             System.out.println();
         }
 
+    }
+
+    /**
+     * Simple unit test for ensuring the DisjointSet class was implemented properly.
+     * */
+    private static void testDisjointSet() {
+        var ds = new DisjointSet(6 + 1);
+        ds.union(1,2);
+        ds.union(3,4);
+        ds.union(5,6);
+        assert ds.find(1) == ds.find(2);
+        assert ds.find(3) == ds.find(4);
+        assert ds.find(5) == ds.find(6);
+        assert ds.find(1) != ds.find(3);
+        assert ds.find(3) != ds.find(5);
+        ds.union(2,4);
+        ds.union(4,6);
+        assert ds.find(1) == ds.find(6);
+
+        System.out.println("DisjointSet test passed!");
     }
 
 }
