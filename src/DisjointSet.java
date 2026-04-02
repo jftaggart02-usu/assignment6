@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class DisjointSet {
 
@@ -9,6 +10,7 @@ public class DisjointSet {
      * */
     public DisjointSet(int size) {
         s = new int[size];
+        Arrays.fill(s, -1);
     }
 
     /**
