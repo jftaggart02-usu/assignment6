@@ -118,7 +118,7 @@ public class HexGame {
     }
 
     /**
-     * Get the size of a row or column of the grid.
+     * Get the size of the grid (row or column size)
      * */
     public int getSize() {
         return size;
@@ -127,6 +127,36 @@ public class HexGame {
     // Private members
     private boolean isOccupied(int position) {
         return grid[position] != Color.None;
+    }
+
+    /**
+     * Get positions of adjacent cells in the grid.
+     * */
+    private ArrayList<Integer> getAdjacentCells(int position) {
+        var ac = new ArrayList<Integer>();
+        ac.add(position+1);
+        ac.add(position-1);
+        ac.add(position+size-1);
+        ac.add(position+size);
+        ac.add(position-size);
+        ac.add(position-size+1);
+        if (touchingTopEdge(position)) {
+            ac.remove(Integer.valueOf(position-size));
+            ac.remove(Integer.valueOf(position-size+1));
+        }
+        if (touchingBottomEdge(position)) {
+            ac.remove(Integer.valueOf(position+size));
+            ac.remove(Integer.valueOf(position+size-1));
+        }
+        if (touchingLeftEdge(position)) {
+            ac.remove(Integer.valueOf(position-1));
+            ac.remove(Integer.valueOf(position+size-1));
+        }
+        if (touchingRightEdge(position)) {
+            ac.remove(Integer.valueOf(position-size+1));
+            ac.remove(Integer.valueOf(position+1));
+        }
+        return ac;
     }
 
     /**
@@ -140,14 +170,31 @@ public class HexGame {
         if (touchingBottomEdge(position)) {
             neighborsRed.add(BOTTOM_EDGE);
         }
-        // LEFT OFF HERE
+        for (Integer i : getAdjacentCells(position)) {
+            if (grid[i] == Color.Red) {
+                neighborsRed.add(i);
+            }
+        }
+        return neighborsRed;
     }
 
     /**
      * Return the disjoint set elements associated with the blue neighbors of the provided grid index
      * */
     private ArrayList<Integer> getNeighborsBlue(int position) {
-
+        var neighborsBlue = new ArrayList<Integer>();
+        if (touchingTopEdge(position)) {
+            neighborsBlue.add(LEFT_EDGE);
+        }
+        if (touchingBottomEdge(position)) {
+            neighborsBlue.add(RIGHT_EDGE);
+        }
+        for (Integer i : getAdjacentCells(position)) {
+            if (grid[i] == Color.Blue) {
+                neighborsBlue.add(i);
+            }
+        }
+        return neighborsBlue;
     }
 
     private boolean touchingTopEdge(int idx) {
