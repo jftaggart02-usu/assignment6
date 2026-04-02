@@ -14,21 +14,46 @@ public class Assignment6Driver {
 
     public static void main(String[] args) {
 
-        testGame();
-        //playGame("moves1.txt");
-        //System.out.println();
-        //playGame("moves2.txt");
+//        testGame();
+        playGame("moves1.txt");
+        System.out.println();
+        playGame("moves2.txt");
     }
 
-//    private static void playGame(String filename) {
-//        File file = new File(filename);
-//        try (Scanner input = new Scanner(file)) {
-//            // TODO: Write some good stuff here
-//        }
-//        catch (java.io.IOException ex) {
-//            System.out.println("An error occurred trying to read the moves file: " + ex);
-//        }
-//    }
+    private static void playGame(String filename) {
+        File file = new File(filename);
+        try (Scanner input = new Scanner(file)) {
+            HexGame game = new HexGame(11);
+
+            boolean win = false;
+            String winner = "None";
+            boolean blue = true;
+            int move = -1;
+            while (!win && input.hasNextInt()) {
+                move = input.nextInt();
+                if (blue) {
+                    win = game.playBlue(move, false);
+                    winner = "Blue";
+                    blue = false;
+                }
+                else {
+                    win = game.playRed(move, false);
+                    winner = "Red";
+                    blue = true;
+                }
+            }
+
+            if (win) {
+                System.out.println(winner + " wins with move at position " + move);
+            }
+
+            printGrid(game);
+
+        }
+        catch (java.io.IOException ex) {
+            System.out.println("An error occurred trying to read the moves file: " + ex);
+        }
+    }
 
     //
     // TODO: You can use this to compare with the output show in the assignment while working on your code
